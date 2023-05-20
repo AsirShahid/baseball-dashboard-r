@@ -5,6 +5,16 @@ library(dplyr)
 library(baseballr)
 library(scales)
 library(rvest)
+
+# Install tidyr and dplyr if you haven't done so already
+if (!require(tidyr)) {
+  install.packages("tidyr")
+}
+if (!require(dplyr)) {
+  install.packages("dplyr")
+}
+
+# Load tidyr and dplyr
 library(tidyr)
 library(dplyr)
 
@@ -35,17 +45,6 @@ for (team in teams) {
 # Combine all the data frames in the list into a single data frame
 combined_df <- bind_rows(all_data)
 
-# Install tidyr and dplyr if you haven't done so already
-if (!require(tidyr)) {
-  install.packages("tidyr")
-}
-if (!require(dplyr)) {
-  install.packages("dplyr")
-}
-
-# Load tidyr and dplyr
-library(tidyr)
-library(dplyr)
 
 # Then continue with your existing code
 combined_df <- combined_df %>%
@@ -63,4 +62,6 @@ rf_df <- subset(combined_df, POS == "RP")
 
 # View the combined data frame
 head(combined_df)
+
+
 
