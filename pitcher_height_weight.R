@@ -5,19 +5,35 @@ library(dplyr)
 library(baseballr)
 library(scales)
 library(rvest)
-
-# Load rvest package
 library(rvest)
+library(dplyr)
 
-# Read the webpage
-webpage <- read_html("https://www.espn.com/mlb/team/roster/_/name/nyy")
+# Create an empty list to store data frames
+all_data <- list()
 
-# Find the table node by its id using xpath
-table_node <- html_node(webpage, xpath = "/html/body/div[1]/div/div/div/main/div[2]/div[5]/div/div[1]/section/div/section/div[2]/div[1]/div[2]/div")
+# Define the vector of team names and abbreviations
+teams <- c("ari", "atl", "bal", "bos", "chc", "chw", "cin", "cle", "col", "det", "hou", "kc", "laa", "lad", "mia", "mil", "min", "nym", "nyy", "oak", "phi", "pit", "sd", "sea", "sf", "stl", "tb", "tex", "tor", "wsh")
 
-# Parse the table into a data frame
-table_df <- html_table(table_node, fill = TRUE)
+# Loop over each team
+for (team in teams) {
+  # Construct the URL for the team's webpage
+  url <- paste0("https://www.espn.com/mlb/team/roster/_/name/", team)
+  
+  # Read the webpage
+  webpage <- read_html(url)
+  
+  # Find the table node by its id using xpath or CSS selector
+  table_node <- html_node(webpage, xpath = "/html/body/div[1]/div/div/div/main/div[2]/div[5]/div/div[1]/section/div/section/div[2]/div[1]/div[2]/div")
+  
+  # Parse the table into a data frame
+  table_df <- html_table(table_node, fill = TRUE)
+  
+  # Append the data frame to the list
+  all_data[[team]] <- table_df
+}
 
-# View the data frame
-head(table_df)
+# Combine all the data frames in the list into a single data frame
+combined_df <- bind_rows(all_data)
 
+# View the combined data frame
+head(combined_df)
