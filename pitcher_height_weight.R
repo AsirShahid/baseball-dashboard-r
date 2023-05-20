@@ -78,7 +78,7 @@ rp_df <- subset(combined_df, POS == "RP")
 
 # Get pitcher stats for this season
 
-pitcher_stats <- baseballr::fg_pitcher_leaders(2023, 2023, qual="0")
+pitcher_stats <- baseballr::fg_pitcher_leaders(2023, 2023, qual="y")
 
 final_df <- merge(pitcher_stats, combined_df, by="Name", all.x = TRUE)
 
@@ -99,7 +99,7 @@ final_df <- final_df[, column_names]
 final_df <- as.data.frame(final_df)
 
 
-pitcher_stats_2022 = baseballr::fg_pitcher_leaders(2022, 2022, qual="0")
+pitcher_stats_2022 = baseballr::fg_pitcher_leaders(2022, 2022, qual="y")
 
 # Add '_2022' to the names of the columns in pitcher_stats_2022, except for 'Name'
 names(pitcher_stats_2022) <- ifelse(names(pitcher_stats_2022) != "Name", paste0(names(pitcher_stats_2022), "_2022"), "Name")
