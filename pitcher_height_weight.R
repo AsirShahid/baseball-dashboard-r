@@ -82,16 +82,16 @@ pitcher_stats <- baseballr::fg_pitcher_leaders(2023, 2023, qual="0")
 
 final_df <- merge(pitcher_stats, combined_df, by="Name", all.x = TRUE)
 
-final_df <- final_df[!is.na(final_df$HT) & !is.na(final_df$WT), ]
+final_df <- final_df[!is.na(final_df$BMI), ]
 
 # Get the names of all columns
 column_names <- names(final_df)
 
 # Remove 'height' and 'weight' from our list of column names
-column_names <- column_names[!column_names %in% c("HT", "WT")]
+column_names <- column_names[!column_names %in% c("height_inches", "weight_lbs", "BMI")]
 
 # Add 'height' and 'weight' back in the desired positions
-column_names <- c(column_names[1:2], "HT", "WT", column_names[3:length(column_names)])
+column_names <- c(column_names[1:6], "height_inches", "weight_lbs", "BMI", column_names[7:length(column_names)])
 
 # Apply the new column order to the data frame
 final_df <- final_df[, column_names]
