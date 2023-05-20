@@ -132,13 +132,6 @@ final_df_long$Year <- recode(final_df_long$Year, "WAR" = "2023", "WAR_2022" = "2
 
 library(ggplot2)
 
-ggplot(final_df_long, aes(x = BMI, y = WAR, color = Year)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "BMI", y = "WAR", color = "Year", title = "BMI vs WAR") +
-  theme_minimal()
-
-
 # Fit linear models for each year
 lm_2022 <- lm(WAR ~ BMI, data = subset(final_df_long, Year == "2022"))
 lm_2023 <- lm(WAR ~ BMI, data = subset(final_df_long, Year == "2023"))
