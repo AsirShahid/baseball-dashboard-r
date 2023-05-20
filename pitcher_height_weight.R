@@ -58,7 +58,7 @@ combined_df$Name <- gsub("\\d", "", combined_df$Name)
 # create a new data frame with only SPs
 sp_df <- subset(combined_df, POS == "SP")
 
-rf_df <- subset(combined_df, POS == "RP")
+rp_df <- subset(combined_df, POS == "RP")
 
 # View the combined data frame
 head(combined_df)
