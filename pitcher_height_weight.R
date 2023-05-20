@@ -63,8 +63,10 @@ combined_df <- combined_df %>%
   mutate(HT_in_inches = as.numeric(HT_in_inches),
          WT = as.numeric(WT))
 
+
 # remove the numbers from the name column
 combined_df$Name <- gsub("\\d", "", combined_df$Name)
+
 
 # View the combined data frame
 head(combined_df)
