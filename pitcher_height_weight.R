@@ -117,3 +117,40 @@ pattern_columns_to_keep <- c("ERA", "WAR", "FIP")
 # Use select() to keep these columns
 final_df <- final_df %>%
   select(one_of(exact_columns_to_keep), matches(paste(pattern_columns_to_keep, collapse="|")))
+
+
+keep_columns <- c("Name", "height_inches", "weight_lbs", "BMI", "W", "L", "G", "GS", "IP", "Pitches")
+
+# Separate your data frame
+final_df_keep <- final_df[keep_columns]
+final_df_stats <- final_df[setdiff(names(final_df), keep_columns)]
+
+
+interleave <- function(a, b) {
+  max_len <- max(length(a), length(b))
+  a_long <- c(a, rep(NA, max_len - length(a)))
+  b_long <- c(b, rep(NA, max_len - length(b)))
+  c(rbind(a_long, b_long))
+}
+
+# Extract all column names from the stats data frame
+all_names <- names(final_df_stats)
+
+# Separate the column names into two groups: those containing "_2022" and those not containing "_2022"
+names_2022 <- sort(grep("_2022", all_names, value = TRUE))
+names_2023 <- sort(setdiff(all_names, names_2022))
+
+# Create new list of names by interleaving the two lists of column names
+new_order <- interleave(names_2023, names_2022)
+new_order <- new_order[!is.na(new_order)]  # Remove NAs that were added in the interleaving process
+
+# Reorder the columns of the stats data frame based on the interleaved list of column names
+final_df_stats <- final_df_stats[, new_order]
+
+final_df <- cbind(final_df_keep, final_df_stats)
+
+new_order <- interleave(names_2023, names_2022)
+new_order <- new_order[!is.na(new_order)]  # Remove NAs that were added in the interleaving process
+
+# Reorder the columns of the data frame based on the interleaved list of column names
+final_df <- final_df[, new_order]
