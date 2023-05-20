@@ -107,3 +107,13 @@ names(pitcher_stats_2022) <- ifelse(names(pitcher_stats_2022) != "Name", paste0(
 # Merge the 2022 stats into final_df by 'Name' or 'playerid'
 final_df <- merge(final_df, pitcher_stats_2022, by = "Name", all.x = TRUE)  # Replace "Name" with "playerid" if you want to merge on 'playerid'
 
+
+# Specify the exact columns you want to keep
+exact_columns_to_keep <- c("Name", "height_inches", "weight_lbs", "BMI", "W", "L", "G", "GS", "IP", "Pitches")
+
+# Specify the patterns of columns you want to keep
+pattern_columns_to_keep <- c("ERA", "WAR", "FIP")
+
+# Use select() to keep these columns
+final_df <- final_df %>%
+  select(one_of(exact_columns_to_keep), matches(paste(pattern_columns_to_keep, collapse="|")))
