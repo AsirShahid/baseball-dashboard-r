@@ -95,3 +95,15 @@ column_names <- c(column_names[1:6], "height_inches", "weight_lbs", "BMI", colum
 
 # Apply the new column order to the data frame
 final_df <- final_df[, column_names]
+
+final_df <- as.data.frame(final_df)
+
+
+pitcher_stats_2022 = baseballr::fg_pitcher_leaders(2022, 2022, qual="0")
+
+# Add '_2022' to the names of the columns in pitcher_stats_2022, except for 'Name'
+names(pitcher_stats_2022) <- ifelse(names(pitcher_stats_2022) != "Name", paste0(names(pitcher_stats_2022), "_2022"), "Name")
+
+# Merge the 2022 stats into final_df by 'Name' or 'playerid'
+final_df <- merge(final_df, pitcher_stats_2022, by = "Name", all.x = TRUE)  # Replace "Name" with "playerid" if you want to merge on 'playerid'
+
