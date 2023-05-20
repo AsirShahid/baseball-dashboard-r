@@ -81,3 +81,10 @@ column_names <- c(column_names[1:2], "HT", "WT", column_names[3:length(column_na
 # Apply the new column order to the data frame
 final_df <- final_df[, column_names]
 
+# Convert height to inches
+final_df$height_inches <- as.numeric(gsub("'", "", unlist(strsplit(as.character(final_df$HT), split=" "))[c(TRUE, FALSE)])) * 12 +
+  as.numeric(gsub("\"", "", unlist(strsplit(as.character(final_df$HT), split=" "))[c(FALSE, TRUE)]))
+
+# Convert weight to numeric
+final_df$weight_lbs <- as.numeric(final_df$WT)
+
