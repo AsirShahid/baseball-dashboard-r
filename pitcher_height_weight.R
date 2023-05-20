@@ -63,5 +63,8 @@ rp_df <- subset(combined_df, POS == "RP")
 # View the combined data frame
 head(combined_df)
 
+pitcher_stats <- baseballr::fg_pitcher_leaders(2023, 2023, qual="0")
 
+final_df <- merge(pitcher_stats, combined_df, by="Name", all.x = TRUE)
 
+final_df <- final_df[!is.na(final_df$HT) & !is.na(final_df$WT), ]
