@@ -88,3 +88,21 @@ final_df$height_inches <- as.numeric(gsub("'", "", unlist(strsplit(as.character(
 # Convert weight to numeric
 final_df$weight_lbs <- as.numeric(final_df$WT)
 
+# Convert height to meters and weight to kilograms
+final_df$height_m <- final_df$height_inches * 0.0254
+final_df$weight_kg <- final_df$weight_lbs * 0.453592
+
+# Calculate BMI
+final_df$BMI <- final_df$weight_kg / (final_df$height_m ^ 2)
+
+# Get the names of all columns
+column_names <- names(final_df)
+
+# Remove 'BMI' from our list of column names
+column_names <- column_names[!column_names %in% "BMI"]
+
+# Add 'BMI' back in the desired position
+column_names <- c(column_names[1:5], "BMI", column_names[6:length(column_names)])
+
+# Apply the new column order to the data frame
+final_df <- final_df[, column_names]
