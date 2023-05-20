@@ -119,3 +119,10 @@ final_df <- final_df %>%
   select(one_of(exact_columns_to_keep), matches(paste(pattern_columns_to_keep, collapse="|")))
 
 
+library(ggplot2)
+
+ggplot(final_df, aes(x = BMI, y = WAR)) +
+  geom_point() +
+  labs(x = "BMI", y = "WAR", title = "BMI vs WAR") +
+  theme_minimal()
+
