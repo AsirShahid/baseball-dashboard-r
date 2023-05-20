@@ -49,20 +49,8 @@ library(dplyr)
 
 # Then continue with your existing code
 combined_df <- combined_df %>%
-  mutate(HT = gsub("'", " ", HT),  # replace the ' character with a space
-         HT = gsub("\"", "", HT),  # remove the " character
-         WT = gsub(" lbs", "", WT)) %>%  # remove " lbs" from the weight
-  separate(HT, into = c("feet", "inches"), sep = " ", extra = "drop") %>%
-  mutate(feet = as.numeric(feet),
-         inches = as.numeric(inches),
-         HT_in_inches = feet*12 + inches) %>%
-  select(-feet, -inches)  # remove the temporary columns
-
-# Convert the height and weight columns to numeric
-combined_df <- combined_df %>%
-  mutate(HT_in_inches = as.numeric(HT_in_inches),
-         WT = as.numeric(WT))
-
+  mutate(WT = gsub(" lbs", "", WT)) # remove " lbs" from the weight
+  
 
 # remove the numbers from the name column
 combined_df$Name <- gsub("\\d", "", combined_df$Name)
