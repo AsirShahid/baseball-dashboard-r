@@ -54,14 +54,29 @@ combined_df <- combined_df %>%
 # remove the numbers from the name column
 combined_df$Name <- gsub("\\d", "", combined_df$Name)
 
+# Convert height to inches
+combined_df$height_inches <- as.numeric(gsub("'", "", unlist(strsplit(as.character(combined_df$HT), split=" "))[c(TRUE, FALSE)])) * 12 +
+  as.numeric(gsub("\"", "", unlist(strsplit(as.character(combined_df$HT), split=" "))[c(FALSE, TRUE)]))
+
+# Convert weight to numeric
+combined_df$weight_lbs <- as.numeric(combined_df$WT)
+
+# Convert height to meters and weight to kilograms
+combined_df$height_m <- combined_df$height_inches * 0.0254
+combined_df$weight_kg <- combined_df$weight_lbs * 0.453592
+
+# Calculate BMI
+combined_df$BMI <- combined_df$weight_kg / (combined_df$height_m ^ 2)
+
+# View the combined data frame
+head(combined_df)
 
 # create a new data frame with only SPs
 sp_df <- subset(combined_df, POS == "SP")
 
 rp_df <- subset(combined_df, POS == "RP")
 
-# View the combined data frame
-head(combined_df)
+# Get pitcher stats for this season
 
 pitcher_stats <- baseballr::fg_pitcher_leaders(2023, 2023, qual="0")
 
@@ -77,32 +92,6 @@ column_names <- column_names[!column_names %in% c("HT", "WT")]
 
 # Add 'height' and 'weight' back in the desired positions
 column_names <- c(column_names[1:2], "HT", "WT", column_names[3:length(column_names)])
-
-# Apply the new column order to the data frame
-final_df <- final_df[, column_names]
-
-# Convert height to inches
-final_df$height_inches <- as.numeric(gsub("'", "", unlist(strsplit(as.character(final_df$HT), split=" "))[c(TRUE, FALSE)])) * 12 +
-  as.numeric(gsub("\"", "", unlist(strsplit(as.character(final_df$HT), split=" "))[c(FALSE, TRUE)]))
-
-# Convert weight to numeric
-final_df$weight_lbs <- as.numeric(final_df$WT)
-
-# Convert height to meters and weight to kilograms
-final_df$height_m <- final_df$height_inches * 0.0254
-final_df$weight_kg <- final_df$weight_lbs * 0.453592
-
-# Calculate BMI
-final_df$BMI <- final_df$weight_kg / (final_df$height_m ^ 2)
-
-# Get the names of all columns
-column_names <- names(final_df)
-
-# Remove 'BMI' from our list of column names
-column_names <- column_names[!column_names %in% "BMI"]
-
-# Add 'BMI' back in the desired position
-column_names <- c(column_names[1:5], "BMI", column_names[6:length(column_names)])
 
 # Apply the new column order to the data frame
 final_df <- final_df[, column_names]
