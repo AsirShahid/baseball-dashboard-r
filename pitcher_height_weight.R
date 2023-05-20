@@ -1,10 +1,3 @@
-library(shiny)
-library(mlbplotR)
-library(ggplot2)
-library(dplyr)
-library(baseballr)
-library(scales)
-library(rvest)
 library(rvest)
 library(dplyr)
 
@@ -13,6 +6,15 @@ all_data <- list()
 
 # Define the vector of team names and abbreviations
 teams <- c("ari", "atl", "bal", "bos", "chc", "chw", "cin", "cle", "col", "det", "hou", "kc", "laa", "lad", "mia", "mil", "min", "nym", "nyy", "oak", "phi", "pit", "sd", "sea", "sf", "stl", "tb", "tex", "tor", "wsh")
+
+# Function to convert height from feet-inches to inches
+convert_height <- function(height) {
+  height_parts <- strsplit(height, "-")[[1]]
+  feet <- as.numeric(height_parts[1])
+  inches <- as.numeric(height_parts[2])
+  total_inches <- feet * 12 + inches
+  return(total_inches)
+}
 
 # Loop over each team
 for (team in teams) {
