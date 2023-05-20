@@ -118,11 +118,43 @@ pattern_columns_to_keep <- c("ERA", "WAR", "FIP")
 final_df <- final_df %>%
   select(one_of(exact_columns_to_keep), matches(paste(pattern_columns_to_keep, collapse="|")))
 
+library(tidyr)
+
+# Select relevant columns and reshape data
+final_df_long <- final_df %>%
+  select(Name, BMI, WAR, WAR_2022) %>%
+  pivot_longer(cols = starts_with("WAR"),
+               names_to = "Year",
+               values_to = "WAR")
+
+# Rename the levels in 'Year' column
+final_df_long$Year <- recode(final_df_long$Year, "WAR" = "2023", "WAR_2022" = "2022")
 
 library(ggplot2)
 
-ggplot(final_df, aes(x = BMI, y = WAR)) +
+ggplot(final_df_long, aes(x = BMI, y = WAR, color = Year)) +
   geom_point() +
-  labs(x = "BMI", y = "WAR", title = "BMI vs WAR") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "BMI", y = "WAR", color = "Year", title = "BMI vs WAR") +
   theme_minimal()
+
+
+# Fit linear models for each year
+lm_2022 <- lm(WAR ~ BMI, data = subset(final_df_long, Year == "2022"))
+lm_2023 <- lm(WAR ~ BMI, data = subset(final_df_long, Year == "2023"))
+
+# Calculate R-squared values
+r2_2022 <- summary(lm_2022)$r.squared
+r2_2023 <- summary(lm_2023)$r.squared
+
+# Create the plot
+p <- ggplot(final_df_long, aes(x = BMI, y = WAR, color = Year)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "BMI", y = "WAR", color = "Year", title = "BMI vs WAR") +
+  theme_minimal() +
+  annotate("text", x = Inf, y = Inf, label = paste("R-squared (2022) = ", round(r2_2022, 3)), hjust = 1.1, vjust = 2, color = "red") +
+  annotate("text", x = Inf, y = Inf, label = paste("R-squared (2023) = ", round(r2_2023, 3)), hjust = 1.1, vjust = 1, color = "green")
+
+print(p)
 
